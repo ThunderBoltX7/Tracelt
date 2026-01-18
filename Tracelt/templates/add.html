@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Tracelt - Add Item{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Add New Item</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select id="type" name="type" required onchange="toggleSaleFields()">
+                <option value="Lost">Lost</option>
+                <option value="Found">Found</option>
+                <option value="Sale">Sale</option>
+            </select>
+        </div>
+        <div class="form-group" id="place-group">
+            <label for="place">Place</label>
+            <input type="text" id="place" name="place">
+        </div>
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" value="{{ request.form.date or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact</label>
+            <input type="text" id="contact" name="contact" required>
+        </div>
+        <div class="form-group" id="price-group" style="display: none;">
+            <label for="price">Price</label>
+            <input type="number" step="0.01" id="price" name="price">
+        </div>
+        <div class="form-group" id="condition-group" style="display: none;">
+            <label for="condition">Condition</label>
+            <select id="condition" name="condition">
+                <option value="New">New</option>
+                <option value="Used">Used</option>
+                <option value="Like New">Like New</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="meet_time">Time to Meet</label>
+            <input type="datetime-local" id="meet_time" name="meet_time">
+        </div>
+        <div class="form-group">
+            <label for="meet_place">Where to Meet</label>
+            <input type="text" id="meet_place" name="meet_place">
+        </div>
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Item</button>
+    </form>
+</div>
+<script>
+    function toggleSaleFields() {
+        const type = document.getElementById('type').value;
+        document.getElementById('price-group').style.display = type === 'Sale' ? 'block' : 'none';
+        document.getElementById('condition-group').style.display = type === 'Sale' ? 'block' : 'none';
+    }
+    toggleSaleFields();
+</script>
+{% endblock %}

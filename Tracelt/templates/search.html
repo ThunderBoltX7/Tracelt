@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Tracelt - Search{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <h1>Search Items</h1>
+    <form method="GET" class="search-form">
+        <div class="form-group">
+            <label for="q">Search Query</label>
+            <input type="text" id="q" name="q" value="{{ query }}" placeholder="Title or description">
+        </div>
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select id="type" name="type">
+                <option value="">All</option>
+                <option value="Lost" {% if type == 'Lost' %}selected{% endif %}>Lost</option>
+                <option value="Found" {% if type == 'Found' %}selected{% endif %}>Found</option>
+                <option value="Sale" {% if type == 'Sale' %}selected{% endif %}>Sale</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="">All</option>
+                <option value="Available" {% if status == 'Available' %}selected{% endif %}>Available</option>
+                <option value="Sold" {% if status == 'Sold' %}selected{% endif %}>Sold</option>
+                <option value="Returned" {% if status == 'Returned' %}selected{% endif %}>Returned</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<div class="items-grid">
+    {% for item in items %}
+    <div class="item-card">
+        {% if item.image %}
+        <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="{{ item.title }}">
+        {% else %}
+        <div class="no-image">No Image</div>
+        {% endif %}
+        <div class="card-content">
+            <h3>{{ item.title }}</h3>
+            <div class="badges">
+                <span class="badge type-{{ item.type.lower() }}">{{ item.type }}</span>
+                <span class="badge status-{{ item.status.lower() }}">{{ item.status }}</span>
+            </div>
+            {% if item.type == 'Sale' and item.price %}
+            <p class="price">${{ "%.2f"|format(item.price) }}</p>
+            {% endif %}
+            <a href="/item/{{ item.id }}" class="btn btn-secondary">View Details</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% if not items %}
+<p class="no-items">No items match your search.</p>
+{% endif %}
+{% endblock %}

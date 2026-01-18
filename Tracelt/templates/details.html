@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Tracelt - {{ item.title }}{% endblock %}
+
+{% block content %}
+<div class="item-details">
+    <div class="detail-image">
+        {% if item.image %}
+        <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="{{ item.title }}">
+        {% else %}
+        <div class="no-image">No Image</div>
+        {% endif %}
+    </div>
+    <div class="detail-info">
+        <h1>{{ item.title }}</h1>
+        <div class="badges">
+            <span class="badge type-{{ item.type.lower() }}">{{ item.type }}</span>
+            <span class="badge status-{{ item.status.lower() }}">{{ item.status }}</span>
+        </div>
+        {% if item.description %}
+        <p><strong>Description:</strong> {{ item.description }}</p>
+        {% endif %}
+        {% if item.place %}
+        <p><strong>Place:</strong> {{ item.place }}</p>
+        {% endif %}
+        {% if item.date %}
+        <p><strong>Date:</strong> {{ item.date }}</p>
+        {% endif %}
+        <p><strong>Contact:</strong> {{ item.contact }}</p>
+        {% if item.type == 'Sale' %}
+        {% if item.price %}
+        <p><strong>Price:</strong> ${{ "%.2f"|format(item.price) }}</p>
+        {% endif %}
+        {% if item.condition %}
+        <p><strong>Condition:</strong> {{ item.condition }}</p>
+        {% endif %}
+        {% endif %}
+        {% if item.meet_time %}
+        <p><strong>Time to Meet:</strong> {{ item.meet_time }}</p>
+        {% endif %}
+        {% if item.meet_place %}
+        <p><strong>Where to Meet:</strong> {{ item.meet_place }}</p>
+        {% endif %}
+        {% if item.status == 'Available' %}
+        <form method="POST" action="/update_status/{{ item.id }}" class="status-form">
+            <label for="status">Update Status:</label>
+            <select name="status" id="status">
+                {% if item.type == 'Sale' %}
+                <option value="Sold">Sold</option>
+                {% else %}
+                <option value="Returned">Returned</option>
+                {% endif %}
+            </select>
+            <button type="submit" class="btn btn-secondary">Update</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
